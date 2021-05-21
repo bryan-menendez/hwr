@@ -1,20 +1,31 @@
 import logo from './logo.svg';
 import Detail from './pages/Detail'
+import Mangler from './pages/Mangler'
 import './App.css';
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        
-        <Detail message="OOGA BOOGA"/>
-        
-      </header>
-    </div>
+    <Router>
+      <div class="app">
+        <ul>
+          <li>
+            <Link to="/">Detail </Link>
+            <Link to="/Mangler">Mangler</Link>
+          </li>
+        </ul>
+
+        <hr />
+        <Switch>
+          <Route exact path="/">
+            <Detail />
+          </Route>
+          <Route exact path="/Mangler">
+            <Mangler />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

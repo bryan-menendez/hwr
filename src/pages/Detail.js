@@ -40,16 +40,16 @@ class Detail extends React.Component {
 
         return(
             <div>
-                <button onClick={this.showCommits.bind(this)}>render commits</button>
-                <button onClick={this.showForks.bind(this)}>render forks</button>
-                <button onClick={this.showPulls.bind(this)}>render pulls</button>
+                <button onClick={this.selectMode.bind(this, 'commits')}>render commits</button>
+                <button onClick={this.selectMode.bind(this, 'forks')}>render forks</button>
+                <button onClick={this.selectMode.bind(this, 'pulls')}>render pulls</button>
                 <div>{content}</div> 
             </div>
         )
     }
     
-    showCommits() {
-        this.setState({ mode: 'commits' });
+    selectMode(mode_){
+        this.setState({ mode: mode_ });   
     }
     
     renderCommits(){
@@ -63,10 +63,6 @@ class Detail extends React.Component {
             </div>
         );
     }
-
-    showForks() {
-        this.setState({ mode: 'forks' });
-    }
     
     renderForks(){
         return(
@@ -78,10 +74,6 @@ class Detail extends React.Component {
                 )}
             </div>
         );
-    }
-
-    showPulls() {
-        this.setState({ mode: 'pulls' });
     }
     
     renderPulls(){
@@ -96,30 +88,20 @@ class Detail extends React.Component {
         );
     }
 
+    fetchFeed(type){
+        ajax.get("https://api.github.com/repos/facebook/react/" + type)
+            .end((error, response) => {
+                if (!error && response)
+                    this.setState({[type]: response.body});
+                else
+                    console.log("error while fetching api " + type);
+        })
+    }
+
     componentDidMount(){
-        ajax.get('https://api.github.com/repos/facebook/react/commits')
-            .end((error, response) => {
-                if (!error && response)
-                    this.setState({commits: response.body});
-                else
-                    console.log("error while fetching api");
-        })
-
-        ajax.get('https://api.github.com/repos/facebook/react/forks')
-            .end((error, response) => {
-                if (!error && response)
-                    this.setState({forks: response.body});
-                else
-                    console.log("error while fetching api");
-        })
-
-        ajax.get('https://api.github.com/repos/facebook/react/pulls')
-            .end((error, response) => {
-                if (!error && response)
-                    this.setState({pulls: response.body});
-                else
-                    console.log("error while fetching api");
-        })
+        this.fetchFeed('commits');
+        this.fetchFeed('forks');
+        this.fetchFeed('pulls');
     }
 }
 
